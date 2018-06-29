@@ -3,11 +3,8 @@ package com.amangarg.todoapp.activity;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,7 +25,7 @@ import android.widget.Toast;
 
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.adapters.ToDoListAdapter;
-import com.amangarg.todoapp.modal.ToDoData;
+import com.amangarg.todoapp.model.ToDoData;
 import com.amangarg.todoapp.sqlite.SqliteHelper;
 
 import java.util.ArrayList;

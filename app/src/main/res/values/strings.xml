@@ -6,4 +6,7 @@
         <item>Hours</item>
         <item>Days</item>
     </string-array>
+
+    <string name="select_picture">Select Picture</string>
+    <string name="msg_failed_to_get_picture">Failed to get picture!</string>
 </resources>

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amangarg.todoapp.modal.ToDoData;
+import com.amangarg.todoapp.model.ToDoData;
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.sqlite.SqliteHelper;
 
@@ -204,7 +203,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
         TextView todoDetails, todoNotes;
         ImageButton proprityColor;
         ImageView edit, deleteButton;
-        ToDoData toDoData;
 
         public ToDoListViewHolder(View view, final Context context) {
             super(view);

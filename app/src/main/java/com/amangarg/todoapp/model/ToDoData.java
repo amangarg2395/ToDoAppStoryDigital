@@ -1,4 +1,4 @@
-package com.amangarg.todoapp.modal;
+package com.amangarg.todoapp.model;
 
 /**
  * Created by amangarg on 6/29/18.
