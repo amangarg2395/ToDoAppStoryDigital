@@ -14,13 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.model.CategoryData;
-import com.amangarg.todoapp.model.ToDoData;
 import com.amangarg.todoapp.sqlite.SqliteHelper;
 
 import java.util.ArrayList;
@@ -30,12 +28,6 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     List<CategoryData> CategoryDataArrayList = new ArrayList<CategoryData>();
     Context context;
-
-    public CategoryListAdapter(String details) {
-        CategoryData categoryData = new CategoryData();
-        categoryData.setCategoryDetails(details);
-        CategoryDataArrayList.add(categoryData);
-    }
 
     public CategoryListAdapter(ArrayList<CategoryData> categoryDataArrayList, Context context) {
         this.CategoryDataArrayList = categoryDataArrayList;
@@ -52,8 +44,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     @Override
     public void onBindViewHolder(CategoryListAdapter.CategoryListViewHolder categoryListViewHolder, final int position) {
         final CategoryData categoryData = CategoryDataArrayList.get(position);
-        categoryListViewHolder.categoryDetails.setText(categoryData.getCategoryDetails());
-        categoryListViewHolder.categoryNotes.setText(categoryData.getCategoryNotes());
+        categoryListViewHolder.categoryDetails.setText(categoryData.getCategoryTitle());
 
         categoryListViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +83,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 TextView tv = (TextView) dialog.findViewById(R.id.Remainder);
                 tv.setVisibility(View.GONE);
                 lv.setVisibility(View.GONE);
-                todoText.setText(categoryData.getCategoryDetails());
-                todoNote.setText(categoryData.getCategoryNotes());
+                todoText.setText(categoryData.getCategoryTitle());
                 Button save = (Button) dialog.findViewById(R.id.btn_save);
                 Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 cancel.setOnClickListener(new View.OnClickListener() {
@@ -111,10 +101,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                         if (categoryText.getText().length() >= 2) {
 
                             CategoryData updateCd = new CategoryData();
-                            updateCd.setToDoID(categoryData.getCategoryID());
-                            updateCd.setCategoryDetails(categoryText.getText().toString());
-
-                            updateCd.setCategoryNotes(categoryNote.getText().toString());
+                            updateCd.setCategoryId(categoryData.getCategoryID());
+//                            updateCd.setCategoryDetails(categoryText.getText().toString());
+//
+//                            updateCd.setCategoryNotes(categoryNote.getText().toString());
 
                             SqliteHelper mysqlite = new SqliteHelper(view.getContext());
                             Cursor b = mysqlite.updateCategory(updateCd);

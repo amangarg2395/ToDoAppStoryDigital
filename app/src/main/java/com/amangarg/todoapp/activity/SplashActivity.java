@@ -15,10 +15,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Create Sqlite DB
         mySqliteHelper = new SqliteHelper(this);
-        // Go to Main Activity
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainCategoryActivity.class);
         startActivity(intent);
         finish();
     }

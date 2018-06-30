@@ -1,15 +1,12 @@
 package com.amangarg.todoapp.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.model.Picture;
@@ -29,7 +26,9 @@ public class AddTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.add_new_task);
         setContentView(R.layout.activity_add_task);
+
 
         findViewById(R.id.uploadPhotoBtn).setOnClickListener(new View.OnClickListener() {
 
@@ -43,7 +42,7 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-        selectedImagePreview = (ImageView)findViewById(R.id.previewIV);
+        selectedImagePreview = (ImageView) findViewById(R.id.previewIV);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class AddTaskActivity extends AppCompatActivity {
             try {
                 selectedImagePreview.setImageBitmap(new Picture(selectedImageUri, getContentResolver()).getBitmap());
             } catch (IOException e) {
-                Log.e(MainActivity.class.getSimpleName(), "Failed to load image", e);
+                Log.e(MainCategoryActivity.class.getSimpleName(), "Failed to load image", e);
             }
         }
     }

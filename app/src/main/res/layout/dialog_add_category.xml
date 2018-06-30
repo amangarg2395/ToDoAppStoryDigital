@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:minHeight="200dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/addCategoryTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New Task"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/primary" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/newCategoryTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addCategoryTV"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/AppTheme">
+
+            <EditText
+                android:id="@+id/inputCategoryET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:hint="To Do"
+                android:inputType="text">
+
+                <requestFocus />
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/newCategoryTIL"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/transparent"
+            android:elevation="10dp"
+            android:padding="12dp"
+            android:text="Save"
+            android:textColor="@color/primary"
+            android:textColorLink="@color/primary"
+            android:textSize="15sp">
+
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btn_save"
+            android:layout_toLeftOf="@+id/btn_save"
+            android:layout_toStartOf="@+id/btn_save"
+            android:background="@android:color/transparent"
+            android:elevation="10dp"
+            android:padding="12dp"
+            android:text="Cancel"
+            android:textColor="@color/primary_text"
+            android:textColorLink="@color/primary"
+            android:textSize="15sp">
+
+        </android.support.v7.widget.AppCompatButton>
+
+    </RelativeLayout>
+</ScrollView>

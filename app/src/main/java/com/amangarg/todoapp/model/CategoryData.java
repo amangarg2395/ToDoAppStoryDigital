@@ -2,35 +2,27 @@ package com.amangarg.todoapp.model;
 
 public class CategoryData {
     int CategoryID;
-    String CategoryDetails, CategoryNotes;
+    String CategoryTitle;
+
+    public void setCategoryId(int categoryID) {
+        CategoryID = categoryID;
+    }
 
     public int getCategoryID() {
         return CategoryID;
     }
 
-    public void setToDoID(int categoryID) {
-        CategoryID = categoryID;
+    public void setCategoryTitle(String categoryTitle) {
+        CategoryTitle = categoryTitle;
     }
 
-    public String getCategoryDetails() {
-        return CategoryDetails;
-    }
-
-    public void setCategoryDetails(String categoryDetails) {
-        CategoryDetails = categoryDetails;
-    }
-
-    public String getCategoryNotes() {
-        return CategoryNotes;
-    }
-
-    public void setCategoryNotes(String categoryNotes) {
-        CategoryNotes = categoryNotes;
+    public String getCategoryTitle() {
+        return CategoryTitle;
     }
 
     @Override
     public String toString() {
-        return "ToDoData {id-" + CategoryID + ", taskDetails-" + CategoryDetails + ", notes-" + CategoryNotes + "}";
+        return "CategoryData {categoryId-" + CategoryID + ", categoryTitle-" + CategoryTitle + "}";
     }
 
 }

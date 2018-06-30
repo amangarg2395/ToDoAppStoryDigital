@@ -22,7 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amangarg.todoapp.model.ToDoData;
+import com.amangarg.todoapp.model.TaskData;
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.sqlite.SqliteHelper;
 
@@ -33,52 +33,37 @@ import java.util.List;
  * Created by amangarg on 6/29/18.
  */
 
-public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder> {
-    List<ToDoData> ToDoDataArrayList = new ArrayList<ToDoData>();
+public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder> {
+    List<TaskData> TaskDataArrayList;
     Context context;
 
-    public ToDoListAdapter(String details) {
-        ToDoData toDoData = new ToDoData();
-        toDoData.setToDoTaskDetails(details);
-        ToDoDataArrayList.add(toDoData);
-    }
-
-    public ToDoListAdapter(ArrayList<ToDoData> toDoDataArrayList, Context context) {
-        this.ToDoDataArrayList = toDoDataArrayList;
+    public TaskListAdapter(ArrayList<TaskData> taskDataArrayList, Context context) {
+        this.TaskDataArrayList = taskDataArrayList;
         this.context = context;
     }
 
     @Override
-    public ToDoListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_cardlayout, parent, false);
-        ToDoListViewHolder toDoListViewHolder = new ToDoListViewHolder(view, context);
-        return toDoListViewHolder;
+    public TaskListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_cardlayout, parent, false);
+        TaskListViewHolder taskListViewHolder = new TaskListViewHolder(view, context);
+        return taskListViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ToDoListViewHolder holder, final int position) {
-        final ToDoData td = ToDoDataArrayList.get(position);
-        holder.todoDetails.setText(td.getToDoTaskDetails());
-        holder.todoNotes.setText(td.getToDoNotes());
-        String tdStatus = td.getToDoTaskStatus();
-        if (tdStatus.matches("Complete")) {
-            holder.todoDetails.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-        String type = td.getToDoTaskPrority();
-        int color = 0;
-        if (type.matches("Normal")) {
-            color = Color.parseColor("#009EE3");
-        } else if (type.matches("Low")) {
-            color = Color.parseColor("#33AA77");
-        } else {
-            color = Color.parseColor("#FF7799");
-        }
-        ((GradientDrawable) holder.proprityColor.getBackground()).setColor(color);
+    public void onBindViewHolder(TaskListViewHolder holder, final int position) {
+        final TaskData td = TaskDataArrayList.get(position);
+
+        holder.taskTitle.setText(td.getTaskTitle());
+
+        if (td.getTaskStatus())
+            holder.taskStatus.setText("Complete");
+        else
+            holder.taskStatus.setText("Pending");
 
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = td.getToDoID();
+                int id = td.getTaskID();
                 SqliteHelper mysqlite = new SqliteHelper(view.getContext());
                 Cursor b = mysqlite.deleteTask(id);
                 if (b.getCount() == 0) {
@@ -86,11 +71,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            // Code here will run in UI thread
-                            /* ToDoDataArrayList.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position,ToDoDataArrayList.size()); */
-                            //notifyDataSetChanged();
                         }
                     });
                 } else {
@@ -104,30 +84,15 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(view.getContext());
-                dialog.setContentView(R.layout.custom_dialog);
+                dialog.setContentView(R.layout.dialog_add_task);
                 dialog.show();
-                EditText todoText = (EditText) dialog.findViewById(R.id.input_task_desc);
-                EditText todoNote = (EditText) dialog.findViewById(R.id.input_task_notes);
-                CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkbox);
-                RadioButton rbHigh = (RadioButton) dialog.findViewById(R.id.high);
-                RadioButton rbNormal = (RadioButton) dialog.findViewById(R.id.normal);
-                RadioButton rbLow = (RadioButton) dialog.findViewById(R.id.low);
-                LinearLayout lv = (LinearLayout) dialog.findViewById(R.id.linearLayout);
-                TextView tv = (TextView) dialog.findViewById(R.id.Remainder);
-                tv.setVisibility(View.GONE);
+                EditText taskTitle = dialog.findViewById(R.id.titleET);
+                EditText taskDesc = dialog.findViewById(R.id.descriptionET);
+                LinearLayout lv = dialog.findViewById(R.id.linearLayout);
                 lv.setVisibility(View.GONE);
-                if (td.getToDoTaskPrority().matches("Normal")) {
-                    rbNormal.setChecked(true);
-                } else if (td.getToDoTaskPrority().matches("Low")) {
-                    rbLow.setChecked(true);
-                } else {
-                    rbHigh.setChecked(true);
-                }
-                if (td.getToDoTaskStatus().matches("Complete")) {
-                    cb.setChecked(true);
-                }
-                todoText.setText(td.getToDoTaskDetails());
-                todoNote.setText(td.getToDoNotes());
+
+                taskTitle.setText(td.getTaskTitle());
+                taskDesc.setText(td.getTaskDescription());
                 Button save = (Button) dialog.findViewById(R.id.btn_save);
                 Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 cancel.setOnClickListener(new View.OnClickListener() {
@@ -152,19 +117,19 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
                                 RadioButton btn = (RadioButton) proritySelection.getChildAt(radioId);
                                 RadioSelection = (String) btn.getText();
                             }
-                            ToDoData updateTd = new ToDoData();
-                            updateTd.setToDoID(td.getToDoID());
-                            updateTd.setToDoTaskDetails(todoText.getText().toString());
-                            updateTd.setToDoTaskPrority(RadioSelection);
-                            updateTd.setToDoNotes(todoNote.getText().toString());
-                            if (cb.isChecked()) {
-                                updateTd.setToDoTaskStatus("Complete");
-                            } else {
-                                updateTd.setToDoTaskStatus("Incomplete");
-                            }
+                            TaskData updateTd = new TaskData();
+//                            updateTd.setToDoID(td.getToDoID());
+//                            updateTd.setToDoTaskDetails(todoText.getText().toString());
+//                            updateTd.setToDoTaskPrority(RadioSelection);
+//                            updateTd.setToDoNotes(todoNote.getText().toString());
+//                            if (cb.isChecked()) {
+//                                updateTd.setToDoTaskStatus("Complete");
+//                            } else {
+//                                updateTd.setToDoTaskStatus("Incomplete");
+//                            }
                             SqliteHelper mysqlite = new SqliteHelper(view.getContext());
                             Cursor b = mysqlite.updateTask(updateTd);
-                            ToDoDataArrayList.set(position, updateTd);
+                            TaskDataArrayList.set(position, updateTd);
                             if (b.getCount() == 0) {
                                 //Toast.makeText(view.getContext(), "Some thing went wrong", Toast.LENGTH_SHORT).show();
                                 new Handler().post(new Runnable() {
@@ -196,19 +161,17 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ToDoLi
 
     @Override
     public int getItemCount() {
-        return ToDoDataArrayList.size();
+        return TaskDataArrayList.size();
     }
 
-    public class ToDoListViewHolder extends RecyclerView.ViewHolder {
-        TextView todoDetails, todoNotes;
-        ImageButton proprityColor;
+    public class TaskListViewHolder extends RecyclerView.ViewHolder {
+        TextView taskTitle, taskStatus;
         ImageView edit, deleteButton;
 
-        public ToDoListViewHolder(View view, final Context context) {
+        public TaskListViewHolder(View view, final Context context) {
             super(view);
-            todoDetails = (TextView) view.findViewById(R.id.toDoTextDetails);
-            todoNotes = (TextView) view.findViewById(R.id.toDoTextNotes);
-            proprityColor = (ImageButton) view.findViewById(R.id.typeCircle);
+            taskTitle = (TextView) view.findViewById(R.id.taskTitleTV);
+            taskStatus = (TextView) view.findViewById(R.id.taskStatusTV);
             edit = (ImageView) view.findViewById(R.id.edit);
             deleteButton = (ImageView) view.findViewById(R.id.delete);
             view.setOnClickListener(new View.OnClickListener() {
