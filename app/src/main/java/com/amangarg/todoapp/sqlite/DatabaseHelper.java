@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String CREATE_CATEGORY_TABLE = "CREATE TABLE "
                 + CATEGORY_TABLE + "(" + CATEGORY_UNIQUE_ID + " INTEGER PRIMARY KEY,"
-                + CATEGORY_TITLE + " TEXT," + ")";
+                + CATEGORY_TITLE + " TEXT" + ")";
 
         String CREATE_TASK_TABLE = "CREATE TABLE "
                 + TASK_TABLE + "(" + TASK_UNIQUE_ID + " INTEGER PRIMARY KEY,"
@@ -90,9 +90,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public Cursor selectAllDataFromTask() {
+    public Cursor selectAllDataFromTask(Integer categoryId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from " + TASK_TABLE;
+        Cursor result = db.rawQuery(query, null);
+        return result;
+    }
+
+    public Cursor selectParticularCategoryTask(Integer categoryId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from " + TASK_TABLE + " WHERE " + CATEGORY_UNIQUE_ID + "='" + categoryId + "'";
         Cursor result = db.rawQuery(query, null);
         return result;
     }

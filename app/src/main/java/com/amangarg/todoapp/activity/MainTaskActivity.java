@@ -53,6 +53,10 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
         layoutManager = new LinearLayoutManager(getApplicationContext());
         addTaskFAB = findViewById(R.id.addTaskFAB);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshTask);
+
+        Intent intent = getIntent();
+        final Integer categoryId = intent.getIntExtra("UID", 0);
+
         taskAdapter = new TaskListAdapter(taskDataArrayList, getApplicationContext());
         taskRV.setLayoutManager(layoutManager);
         taskRV.setAdapter(taskAdapter);
@@ -62,7 +66,7 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
             @Override
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
-                updateCardView();
+                updateCardView(categoryId);
             }
         });
         addTaskFAB.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +114,7 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
                             Boolean b = mysqlite.insertIntoTask(contentValues);
                             if (b) {
                                 dialog.hide();
-                                updateCardView();
+                                addAndUpdateCardView();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Some thing went wrong", Toast.LENGTH_SHORT).show();
                             }
@@ -127,10 +131,35 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
         });
     }
 
-    public void updateCardView() {
+    public void updateCardView(Integer categoryId) {
         swipeRefreshLayout.setRefreshing(true);
         mysqlite = new DatabaseHelper(getApplicationContext());
-        Cursor result = mysqlite.selectAllDataFromTask();
+        Cursor result = mysqlite.selectParticularCategoryTask(categoryId);
+        if (result.getCount() == 0) {
+            taskDataArrayList.clear();
+            taskAdapter.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(), "No Tasks", Toast.LENGTH_SHORT).show();
+        } else {
+            taskDataArrayList.clear();
+            taskAdapter.notifyDataSetChanged();
+            while (result.moveToNext()) {
+                TaskData taskData = new TaskData();
+                taskData.setTaskID(result.getInt(0));
+                taskData.setTaskTitle(result.getString(1));
+                taskData.setTaskDescription(result.getString(2));
+                taskData.setTaskImage(result.getString(3));
+                taskData.setTaskStatus(result.getInt(4) > 0);
+                taskDataArrayList.add(taskData);
+            }
+            taskAdapter.notifyDataSetChanged();
+        }
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void addAndUpdateCardView() {
+        swipeRefreshLayout.setRefreshing(true);
+        mysqlite = new DatabaseHelper(getApplicationContext());
+        Cursor result = mysqlite.selectAllDataFromCategory();
         if (result.getCount() == 0) {
             taskDataArrayList.clear();
             taskAdapter.notifyDataSetChanged();
@@ -154,7 +183,6 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        updateCardView();
     }
 
     @Override

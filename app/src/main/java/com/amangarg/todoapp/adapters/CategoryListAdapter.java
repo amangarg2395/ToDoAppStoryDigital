@@ -141,6 +141,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             @Override
             public void onClick(View v) {
                 Intent categoryIntent = new Intent(context, MainTaskActivity.class);
+                Integer UID =  categoryData.getCategoryID();
+                categoryIntent.putExtra("UID", UID);
                 context.startActivity(categoryIntent);
 
             }

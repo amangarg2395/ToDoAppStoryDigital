@@ -14,7 +14,7 @@
             android:id="@+id/addCategoryTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add New Task"
+            android:text="Add New Category"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/primary" />
 
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
-                android:hint="To Do"
+                android:hint="Category"
                 android:inputType="text">
 
                 <requestFocus />
