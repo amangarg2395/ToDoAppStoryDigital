@@ -39,7 +39,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/typeCircle"
                 android:fontFamily="sans-serif"
-                android:text="Movie Name"
+                android:text="Category Name"
                 android:textStyle="bold"
                 android:textColor="@color/primary_text"
                 android:textSize="18dp" />
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:text="Movie Name"
+                android:text="2 Tasks"
                 android:textColor="@color/primary_text"
                 android:textSize="14dp"
                 android:layout_below="@+id/edit"

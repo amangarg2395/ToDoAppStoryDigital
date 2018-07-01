@@ -84,8 +84,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
                 dialog.show();
                 EditText taskTitle = dialog.findViewById(R.id.titleET);
                 EditText taskDesc = dialog.findViewById(R.id.descriptionET);
-                LinearLayout lv = dialog.findViewById(R.id.linearLayout);
-                lv.setVisibility(View.GONE);
 
                 taskTitle.setText(taskData.getTaskTitle());
                 taskDesc.setText(taskData.getTaskDescription());
@@ -95,57 +93,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
-                    }
-                });
-                save.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        EditText todoText = (EditText) dialog.findViewById(R.id.input_task_desc);
-                        EditText todoNote = (EditText) dialog.findViewById(R.id.input_task_notes);
-                        CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkbox);
-                        if (todoText.getText().length() >= 2) {
-                            RadioGroup proritySelection = (RadioGroup) dialog.findViewById(R.id.toDoRG);
-                            String RadioSelection = new String();
-                            if (proritySelection.getCheckedRadioButtonId() != -1) {
-                                int id = proritySelection.getCheckedRadioButtonId();
-                                View radiobutton = proritySelection.findViewById(id);
-                                int radioId = proritySelection.indexOfChild(radiobutton);
-                                RadioButton btn = (RadioButton) proritySelection.getChildAt(radioId);
-                                RadioSelection = (String) btn.getText();
-                            }
-                            TaskData updateTd = new TaskData();
-//                            updateTd.setToDoID(td.getToDoID());
-//                            updateTd.setToDoTaskDetails(todoText.getText().toString());
-//                            updateTd.setToDoTaskPrority(RadioSelection);
-//                            updateTd.setToDoNotes(todoNote.getText().toString());
-//                            if (cb.isChecked()) {
-//                                updateTd.setToDoTaskStatus("Complete");
-//                            } else {
-//                                updateTd.setToDoTaskStatus("Incomplete");
-//                            }
-                            DatabaseHelper mysqlite = new DatabaseHelper(view.getContext());
-                            Cursor b = mysqlite.updateTask(updateTd);
-                            TaskDataArrayList.set(position, updateTd);
-                            if (b.getCount() == 0) {
-                                //Toast.makeText(view.getContext(), "Some thing went wrong", Toast.LENGTH_SHORT).show();
-                                new Handler().post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Code here will run in UI thread
-                                        notifyDataSetChanged();
-                                    }
-                                });
-                                dialog.hide();
-                            } else {
-
-
-                                dialog.hide();
-
-                            }
-
-                        } else {
-                            Toast.makeText(view.getContext(), "Please enter To Do Task", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
             }
