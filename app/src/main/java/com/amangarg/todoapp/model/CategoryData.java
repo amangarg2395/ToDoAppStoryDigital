@@ -22,7 +22,7 @@ public class CategoryData {
 
     @Override
     public String toString() {
-        return "CategoryData {categoryId-" + CategoryID + ", categoryTitle-" + CategoryTitle + "}";
+        return "CategoryData {CategoryUniqueId-" + CategoryID + ", CategoryTitle-" + CategoryTitle + "}";
     }
 
 }

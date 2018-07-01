@@ -13,8 +13,10 @@ import com.amangarg.todoapp.model.TaskData;
  * Created by amangarg on 6/29/18.
  */
 
-public class SqliteHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "ToDoDb.db";
+public class DatabaseHelper extends SQLiteOpenHelper {
+    public static final String DATABASE_NAME = "toDoDatabase";
+
+    public static final int DATABASE_VERSION = 1;
 
     public static final String CATEGORY_TABLE = "Category";
     public static final String CATEGORY_UNIQUE_ID = "CategoryUniqueId";
@@ -31,27 +33,34 @@ public class SqliteHelper extends SQLiteOpenHelper {
     public static final String TASK_STATUS = "TaskStatus";
     public static final String CATAGORY_UNIQUE_ID_FK = "CategoryUniqueId";
 
-    public SqliteHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createCategoryTableQuery = "create table if not exists " + CATEGORY_TABLE + " ( INTEGER PRIMARY KEY AUTOINCREMENT, CategoryTitle TEXT)";
-        String createTaskTableQuery = "create table if not exists " + TASK_TABLE + " ( TaskUniqueId INTEGER PRIMARY KEY AUTOINCREMENT, TaskTitle TEXT, TaskDescription TEXT, TaskImage TEXT, TaskStatus BOOLEAN, FOREIGN KEY(CategoryUniqueId) REFERENCES Category(CategoryUniqueId))";
-        db.execSQL(createCategoryTableQuery);
-        db.execSQL(createTaskTableQuery);
+
+        String CREATE_CATEGORY_TABLE = "CREATE TABLE "
+                + CATEGORY_TABLE + "(" + CATEGORY_UNIQUE_ID + " INTEGER PRIMARY KEY,"
+                + CATEGORY_TITLE + " TEXT," + ")";
+
+        String CREATE_TASK_TABLE = "CREATE TABLE "
+                + TASK_TABLE + "(" + TASK_UNIQUE_ID + " INTEGER PRIMARY KEY,"
+                + TASK_TITLE + " TEXT," + TASK_DESCRIPTION + " TEXT,"
+                + TASK_IMAGE + " TEXT," + TASK_STATUS + " INTEGER,"
+                + CATAGORY_UNIQUE_ID_FK + " INTEGER" + ")";
+
+        db.execSQL(CREATE_CATEGORY_TABLE);
+        db.execSQL(CREATE_TASK_TABLE);
     }
 
-    // Drop Table for new table creation
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TASK_TABLE);
         onCreate(db);
     }
 
-    // Insert into Table
     public boolean insertIntoCategory(ContentValues cv) {
         SQLiteDatabase db = this.getWritableDatabase();
         long results = db.insert(CATEGORY_TABLE, null, cv);

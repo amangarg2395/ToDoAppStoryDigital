@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.adapters.CategoryListAdapter;
 import com.amangarg.todoapp.model.CategoryData;
-import com.amangarg.todoapp.sqlite.SqliteHelper;
+import com.amangarg.todoapp.sqlite.DatabaseHelper;
 
 import java.util.ArrayList;
 
@@ -32,14 +32,16 @@ public class MainCategoryActivity extends AppCompatActivity implements SwipeRefr
     RecyclerView.Adapter categoryAdapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<CategoryData> categoryDataArrayList = new ArrayList<>();
-    SqliteHelper mysqlite;
+    DatabaseHelper mysqlite;
     SwipeRefreshLayout swipeRefreshLayout;
-
+    DatabaseHelper myDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_main);
+
+        myDatabaseHelper = new DatabaseHelper(this);
         categoryRV = findViewById(R.id.categoryRV);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         addCategoryFAB = findViewById(R.id.addCategoryFAB);
@@ -65,21 +67,21 @@ public class MainCategoryActivity extends AppCompatActivity implements SwipeRefr
                 Button save = dialog.findViewById(R.id.btn_save);
                 Button cancel = dialog.findViewById(R.id.btn_cancel);
 
-
                 cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
                     }
                 });
+
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        EditText categoryTitleET = dialog.findViewById(R.id.newCategoryTIL);
+                        EditText categoryTitleET = dialog.findViewById(R.id.inputCategoryET);
                         if (categoryTitleET.getText().length() >= 1) {
                             ContentValues contentValues = new ContentValues();
                             contentValues.put("CategoryTitle", categoryTitleET.getText().toString());
-                            mysqlite = new SqliteHelper(getApplicationContext());
+                            mysqlite = new DatabaseHelper(getApplicationContext());
                             Boolean b = mysqlite.insertIntoCategory(contentValues);
                             if (b) {
                                 dialog.hide();
@@ -102,7 +104,7 @@ public class MainCategoryActivity extends AppCompatActivity implements SwipeRefr
 
     public void updateCardView() {
         swipeRefreshLayout.setRefreshing(true);
-        mysqlite = new SqliteHelper(getApplicationContext());
+        mysqlite = new DatabaseHelper(getApplicationContext());
         Cursor result = mysqlite.selectAllDataFromCategory();
         if (result.getCount() == 0) {
             categoryDataArrayList.clear();

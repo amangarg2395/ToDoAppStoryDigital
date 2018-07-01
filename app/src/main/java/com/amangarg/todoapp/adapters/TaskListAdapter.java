@@ -3,9 +3,6 @@ package com.amangarg.todoapp.adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,7 +20,7 @@ import android.widget.Toast;
 
 import com.amangarg.todoapp.model.TaskData;
 import com.amangarg.todoapp.R;
-import com.amangarg.todoapp.sqlite.SqliteHelper;
+import com.amangarg.todoapp.sqlite.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,21 +46,21 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     }
 
     @Override
-    public void onBindViewHolder(TaskListViewHolder holder, final int position) {
-        final TaskData td = TaskDataArrayList.get(position);
+    public void onBindViewHolder(TaskListAdapter.TaskListViewHolder taskListViewHolder, final int position) {
+        final TaskData taskData = TaskDataArrayList.get(position);
 
-        holder.taskTitle.setText(td.getTaskTitle());
+        taskListViewHolder.taskTitle.setText(taskData.getTaskTitle());
 
-        if (td.getTaskStatus())
-            holder.taskStatus.setText("Complete");
+        if (taskData.getTaskStatus())
+            taskListViewHolder.taskStatus.setText("Complete");
         else
-            holder.taskStatus.setText("Pending");
+            taskListViewHolder.taskStatus.setText("Pending");
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+        taskListViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = td.getTaskID();
-                SqliteHelper mysqlite = new SqliteHelper(view.getContext());
+                int id = taskData.getTaskID();
+                DatabaseHelper mysqlite = new DatabaseHelper(view.getContext());
                 Cursor b = mysqlite.deleteTask(id);
                 if (b.getCount() == 0) {
                     Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_SHORT).show();
@@ -80,7 +76,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
             }
         });
-        holder.edit.setOnClickListener(new View.OnClickListener() {
+        taskListViewHolder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(view.getContext());
@@ -91,8 +87,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
                 LinearLayout lv = dialog.findViewById(R.id.linearLayout);
                 lv.setVisibility(View.GONE);
 
-                taskTitle.setText(td.getTaskTitle());
-                taskDesc.setText(td.getTaskDescription());
+                taskTitle.setText(taskData.getTaskTitle());
+                taskDesc.setText(taskData.getTaskDescription());
                 Button save = (Button) dialog.findViewById(R.id.btn_save);
                 Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 cancel.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +123,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 //                            } else {
 //                                updateTd.setToDoTaskStatus("Incomplete");
 //                            }
-                            SqliteHelper mysqlite = new SqliteHelper(view.getContext());
+                            DatabaseHelper mysqlite = new DatabaseHelper(view.getContext());
                             Cursor b = mysqlite.updateTask(updateTd);
                             TaskDataArrayList.set(position, updateTd);
                             if (b.getCount() == 0) {
@@ -170,10 +166,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         public TaskListViewHolder(View view, final Context context) {
             super(view);
-            taskTitle = (TextView) view.findViewById(R.id.taskTitleTV);
-            taskStatus = (TextView) view.findViewById(R.id.taskStatusTV);
-            edit = (ImageView) view.findViewById(R.id.edit);
-            deleteButton = (ImageView) view.findViewById(R.id.delete);
+            taskTitle = view.findViewById(R.id.taskTitleTV);
+            taskStatus = view.findViewById(R.id.taskStatusTV);
+            edit = view.findViewById(R.id.edit);
+            deleteButton = view.findViewById(R.id.delete);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

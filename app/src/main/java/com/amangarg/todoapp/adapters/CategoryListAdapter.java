@@ -2,8 +2,10 @@ package com.amangarg.todoapp.adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amangarg.todoapp.R;
+import com.amangarg.todoapp.activity.MainTaskActivity;
 import com.amangarg.todoapp.model.CategoryData;
-import com.amangarg.todoapp.sqlite.SqliteHelper;
+import com.amangarg.todoapp.sqlite.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.CategoryListViewHolder> {
 
-    List<CategoryData> CategoryDataArrayList = new ArrayList<CategoryData>();
+    List<CategoryData> CategoryDataArrayList;
     Context context;
 
     public CategoryListAdapter(ArrayList<CategoryData> categoryDataArrayList, Context context) {
@@ -38,7 +41,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public CategoryListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_cardlayout, parent, false);
         CategoryListViewHolder categoryListViewHolder = new CategoryListViewHolder(view, context);
-        return categoryListViewHolder ;
+        return categoryListViewHolder;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             @Override
             public void onClick(View view) {
                 int id = categoryData.getCategoryID();
-                SqliteHelper mysqlite = new SqliteHelper(view.getContext());
+                DatabaseHelper mysqlite = new DatabaseHelper(view.getContext());
                 Cursor b = mysqlite.deleteTask(id);
                 if (b.getCount() == 0) {
                     Toast.makeText(view.getContext(), "Deleted", Toast.LENGTH_SHORT).show();
@@ -67,7 +70,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
             }
         });
-        categoryListViewHolder.edit.setOnClickListener(new View.OnClickListener() {
+        categoryListViewHolder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(view.getContext());
@@ -84,8 +87,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                 tv.setVisibility(View.GONE);
                 lv.setVisibility(View.GONE);
                 todoText.setText(categoryData.getCategoryTitle());
-                Button save = (Button) dialog.findViewById(R.id.btn_save);
-                Button cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                Button save = dialog.findViewById(R.id.btn_save);
+                Button cancel = dialog.findViewById(R.id.btn_cancel);
                 cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -106,7 +109,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 //
 //                            updateCd.setCategoryNotes(categoryNote.getText().toString());
 
-                            SqliteHelper mysqlite = new SqliteHelper(view.getContext());
+                            DatabaseHelper mysqlite = new DatabaseHelper(view.getContext());
                             Cursor b = mysqlite.updateCategory(updateCd);
                             CategoryDataArrayList.set(position, updateCd);
                             if (b.getCount() == 0) {
@@ -134,6 +137,15 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             }
         });
 
+        categoryListViewHolder.categoryCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent categoryIntent = new Intent(context, MainTaskActivity.class);
+                context.startActivity(categoryIntent);
+
+            }
+        });
+
 
     }
 
@@ -144,14 +156,17 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     public class CategoryListViewHolder extends RecyclerView.ViewHolder {
         TextView categoryDetails, categoryNotes;
-        ImageView edit, deleteButton;
+        ImageView editButton, deleteButton;
+        CardView categoryCardView;
 
         public CategoryListViewHolder(View view, final Context context) {
             super(view);
-            categoryDetails = (TextView) view.findViewById(R.id.toDoTextDetails);
-            categoryNotes = (TextView) view.findViewById(R.id.toDoTextNotes);
-            edit = (ImageView) view.findViewById(R.id.edit);
-            deleteButton = (ImageView) view.findViewById(R.id.delete);
+            categoryDetails = view.findViewById(R.id.toDoTextDetails);
+            categoryNotes = view.findViewById(R.id.toDoTextNotes);
+            editButton = view.findViewById(R.id.edit);
+            deleteButton = view.findViewById(R.id.delete);
+            categoryCardView = view.findViewById(R.id.cardview);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

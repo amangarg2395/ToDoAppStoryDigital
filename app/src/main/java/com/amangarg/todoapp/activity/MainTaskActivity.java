@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.amangarg.todoapp.R;
 import com.amangarg.todoapp.adapters.TaskListAdapter;
 import com.amangarg.todoapp.model.Picture;
 import com.amangarg.todoapp.model.TaskData;
-import com.amangarg.todoapp.sqlite.SqliteHelper;
+import com.amangarg.todoapp.sqlite.DatabaseHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,15 +39,16 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
     RecyclerView.Adapter taskAdapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<TaskData> taskDataArrayList = new ArrayList<>();
-    SqliteHelper mysqlite;
+    DatabaseHelper mysqlite;
     SwipeRefreshLayout swipeRefreshLayout;
+    DatabaseHelper myDatabaseHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_main);
-
+        myDatabaseHelper = new DatabaseHelper(this);
         taskRV = findViewById(R.id.taskRV);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         addTaskFAB = findViewById(R.id.addTaskFAB);
@@ -75,7 +74,7 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
                 Button save = dialog.findViewById(R.id.save_btn);
                 Button cancel = dialog.findViewById(R.id.cancel_btn);
 
-                findViewById(R.id.uploadPhotoBtn).setOnClickListener(new View.OnClickListener() {
+                dialog.findViewById(R.id.uploadPhotoBtn).setOnClickListener(new View.OnClickListener() {
 
                     public void onClick(View arg0) {
 
@@ -107,7 +106,7 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
                             contentValues.put("TaskDescription", taskDescET.getText().toString());
                             contentValues.put("TaskImage", taskDescET.getText().toString());
                             contentValues.put("TaskStatus", statusSwitch.isChecked());
-                            mysqlite = new SqliteHelper(getApplicationContext());
+                            mysqlite = new DatabaseHelper(getApplicationContext());
                             Boolean b = mysqlite.insertIntoTask(contentValues);
                             if (b) {
                                 dialog.hide();
@@ -130,7 +129,7 @@ public class MainTaskActivity extends AppCompatActivity implements SwipeRefreshL
 
     public void updateCardView() {
         swipeRefreshLayout.setRefreshing(true);
-        mysqlite = new SqliteHelper(getApplicationContext());
+        mysqlite = new DatabaseHelper(getApplicationContext());
         Cursor result = mysqlite.selectAllDataFromTask();
         if (result.getCount() == 0) {
             taskDataArrayList.clear();

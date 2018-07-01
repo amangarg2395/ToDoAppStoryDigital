@@ -14,21 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- Splash Screen -->
-        <activity
-            android:name=".activity.SplashActivity"
-            android:theme="@style/SplashTheme" >
+        <activity android:name=".activity.MainTaskActivity" />
+        <activity android:name=".activity.MainCategoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Main Activity -->
-
-        <activity android:name=".activity.AddTaskActivity"/>
-        <activity android:name=".activity.MainTaskActivity" />
-        <activity android:name=".activity.MainCategoryActivity" />
     </application>
 
 </manifest>
